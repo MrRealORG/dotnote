@@ -1,0 +1,66 @@
+/* DotNote widgets */
+:root {
+  --accent: #d71921;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --sans: "Segoe UI", Inter, system-ui, sans-serif;
+}
+[data-theme="nothing-dark"] { --bg:#0f0f0f; --panel:#161616; --border:#262626; --text:#f2f2f2; --muted:#8a8a8a; --dim:#555; --panel2:#1c1c1c; --danger:#ff5c5c; --ok:#39d98a; }
+[data-theme="nothing-light"] { --bg:#f2f2f2; --panel:#ffffff; --border:#ddd; --text:#111; --muted:#666; --dim:#999; --panel2:#fafafa; --danger:#d11; --ok:#0a8f56; }
+[data-theme="paper"] { --bg:#f6f3ec; --panel:#fffdf8; --border:#e0dacc; --text:#26231c; --muted:#77705f; --dim:#a49b86; --panel2:#fbf9f4; --danger:#c0392b; --ok:#1e8e5a; }
+[data-theme="midnight"] { --bg:#0a101c; --panel:#101828; --border:#1c2942; --text:#e8eefc; --muted:#7c8db0; --dim:#4d5c7d; --panel2:#16203a; --danger:#ff6b6b; --ok:#3fdd8d; --accent:#5b8cff; }
+[data-theme="forest"] { --bg:#0d1510; --panel:#121e17; --border:#213427; --text:#e9f3ea; --muted:#86a189; --dim:#56705a; --panel2:#182a1e; --danger:#ff6b6b; --ok:#52d789; --accent:#52d789; }
+[data-theme="crimson"] { --bg:#0e0809; --panel:#170d0f; --border:#301a1f; --text:#f7ecee; --muted:#a97f86; --dim:#6d4d53; --panel2:#201114; --danger:#ff5c5c; --ok:#39d98a; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow: hidden; user-select: none; -webkit-user-select: none; }
+.wg { display: flex; flex-direction: column; height: 100vh; }
+.wg-head {
+  display: flex; align-items: center; gap: 7px; padding: 9px 12px;
+  border-bottom: 1px solid var(--border); font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted);
+}
+.wg-head .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.wg-head .grow { flex: 1; }
+.wg-head button { background: none; border: none; color: var(--dim); cursor: pointer; font-size: 13px; padding: 2px 4px; border-radius: 5px; }
+.wg-head button:hover { color: var(--text); background: var(--panel2); }
+.wg-body { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--panel2); border-radius: 6px; }
+
+.wg-quick textarea {
+  flex: 1; background: none; border: none; outline: none; resize: none; color: var(--text);
+  font-size: 14px; line-height: 1.6; min-height: 120px;
+}
+.wg-quick .wg-foot { display: flex; gap: 8px; align-items: center; padding-top: 8px; border-top: 1px solid var(--border); }
+.wg-btn {
+  background: var(--panel2); border: 1px solid var(--border); color: var(--text);
+  border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer;
+}
+.wg-btn:hover { border-color: var(--muted); }
+.wg-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.wg-btn.rec { background: var(--danger); border-color: var(--danger); color: #fff; animation: wpulse 1.2s infinite; }
+@keyframes wpulse { 50% { opacity: .55; } }
+
+.wg-clock { text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.wg-clock .time { font-family: var(--mono); font-size: 44px; letter-spacing: 2px; }
+.wg-clock .date { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.rem-row { display: flex; align-items: center; gap: 8px; padding: 7px 9px; background: var(--panel); border: 1px solid var(--border); border-radius: 9px; font-size: 12.5px; }
+.rem-row .when { font-family: var(--mono); font-size: 10px; color: var(--accent); flex: none; }
+.rem-row .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.task-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; font-size: 13px; }
+.task-row:hover { background: var(--panel); }
+.task-row.done .t { text-decoration: line-through; color: var(--dim); }
+.ck { width: 15px; height: 15px; border: 1.5px solid var(--muted); border-radius: 5px; cursor: pointer; flex: none; position: relative; }
+.task-row.done .ck { background: var(--accent); border-color: var(--accent); }
+.task-row.done .ck::after { content:""; position:absolute; left:4px; top:.5px; width:4px; height:7px; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg); }
+.task-row .t { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wg-add { display: flex; gap: 6px; }
+.wg-add input { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; color: var(--text); outline: none; font-size: 12.5px; }
+
+.wg-focus { text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+.wg-focus .timer { font-family: var(--mono); font-size: 46px; letter-spacing: 2px; }
+.wg-focus .timer.break { color: var(--ok); }
+.wg-focus .phase { font-family: var(--mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.wg-focus .row { display: flex; gap: 8px; justify-content: center; }
+.wg-note-empty { color: var(--dim); text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; padding: 18px 0; }

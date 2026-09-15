@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DotNote</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body class="dotgrid">
+  <div class="app">
+    <!-- ===== spaces rail ===== -->
+    <nav class="rail" id="rail">
+      <div class="logo" id="logoHome" title="DotNote — Ctrl+K">N</div>
+      <div id="spaceList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <button class="add-space" id="btnAddSpace" title="New space">+</button>
+      <div class="rail-spacer"></div>
+      <button class="rail-btn" id="railGoals" title="Goals &amp; focus (Alt+G for tasks widget)">◎</button>
+      <button class="rail-btn" id="railVoice" title="Voice room — record &amp; live transcript">🎙</button>
+      <button class="rail-btn" id="railFiles" title="Files &amp; imports">▣</button>
+      <button class="rail-btn" id="railTrash" title="Trash">⌫</button>
+      <button class="rail-btn" id="railSettings" title="Settings (Ctrl+,)">⚙</button>
+    </nav>
+
+    <!-- ===== sidebar ===== -->
+    <aside class="sidebar">
+      <div class="side-head">
+        <div class="space-name" id="spaceName" title="Click to rename space"><span class="dot"></span><span id="spaceNameText">HOME</span></div>
+        <button class="searchbtn" id="btnPalette">🔍 <span>Search or command…</span><kbd>Ctrl K</kbd></button>
+      </div>
+      <div class="side-scroll" id="sideNav"></div>
+      <div class="side-foot">
+        <div class="usercard">
+          <div class="avatar">Y</div>
+          <div class="uname" id="userName">you</div>
+          <button class="iconbtn" id="btnMicQuick" title="Voice room — record &amp; live transcript">🎙</button>
+          <button class="iconbtn" id="btnThemeQuick" title="Toggle light / dark">◑</button>
+          <button class="iconbtn" id="btnSettingsQuick" title="Settings (Ctrl+,)">⚙</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== main ===== -->
+    <main class="main" id="main">
+      <!-- NOTES view -->
+      <section class="view" id="view-notes">
+        <div class="notes-wrap">
+          <div class="notes-list-col">
+            <div class="notes-toolbar">
+              <input type="text" id="noteSearch" placeholder="Filter notes…" />
+              <button class="btn primary sm" id="btnNewNote" title="Ctrl+N">+ New</button>
+              <button class="btn sm" id="btnNewNoteMenu" title="Templates ▾">▾</button>
+            </div>
+            <div class="notes-scroll" id="noteList"></div>
+          </div>
+          <div class="editor-col" id="editorCol">
+            <div class="editor-top" id="editorTop">
+              <input class="title" id="noteTitle" placeholder="Untitled" />
+              <button class="iconbtn" id="btnStar" title="Star">☆</button>
+              <button class="iconbtn" id="btnPin" title="Pin">📌</button>
+              <button class="iconbtn" id="btnAttach" title="Attach image or document">📎</button>
+              <button class="iconbtn" id="btnRemind" title="Set reminder on this note">🔔</button>
+              <button class="iconbtn" id="btnAskAI" title="AI actions on this note">✨</button>
+              <button class="iconbtn" id="btnTrashNote" title="Move to trash">🗑</button>
+            </div>
+            <div class="editor-scroll"><div class="editor-page" id="editor"></div></div>
+            <div class="editor-foot">
+              <span id="edWords">0 WORDS</span>
+              <span id="edSaved">SAVED</span>
+              <span class="spacer"></span>
+              <span>/ BLOCK MENU · RIGHT-CLICK BLOCK</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHAT view -->
+      <section class="view" id="view-chat">
+        <div class="view-head">
+          <div class="vh-title"><span class="hash">#</span><span id="chatName">general</span></div>
+          <div class="vh-topic" id="chatTopic"></div>
+          <div class="vh-actions">
+            <button class="btn ghost sm" id="btnChatNewNote">📝 Save as note</button>
+          </div>
+        </div>
+        <div class="chat-scroll" id="chatScroll"></div>
+        <div class="chat-compose">
+          <div class="compose-box">
+            <textarea id="chatInput" rows="1" placeholder="Message…  @ai to ask AI · @NoteName to reference a note"></textarea>
+            <button class="iconbtn" id="btnChatMic" title="Voice input">🎙</button>
+            <button class="btn primary sm" id="btnChatSend">Send</button>
+          </div>
+          <div class="compose-hint">ENTER TO SEND · SHIFT+ENTER NEWLINE · / FOR COMMANDS</div>
+        </div>
+      </section>
+
+      <!-- VOICE view -->
+      <section class="view" id="view-voice">
+        <div class="voice-wrap">
+          <div class="voice-main">
+            <div class="voice-status" id="voiceStatus">● READY</div>
+            <div class="voice-timer" id="voiceTimer">00:00</div>
+            <div class="wave" id="voiceWave"></div>
+            <button class="mic-btn" id="btnMic" title="Start / stop recording"><span class="ring"></span>🎙</button>
+            <div class="voice-seg-row">
+              <button class="btn sm" id="btnLive">◉ Live transcript (mic)</button>
+              <button class="btn sm" id="btnLiveSystem">◉ Live transcript — meeting audio (beta)</button>
+            </div>
+            <div class="transcript-pane" id="transcriptPane"><span class="t-live muted">Live transcript will appear here…</span></div>
+          </div>
+          <div class="recordings-col">
+            <div class="rc-head"><span>Recordings — kept 30 days</span><button class="btn ghost sm" id="btnRecRefresh">↻</button></div>
+            <div class="rec-list" id="recList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GOALS view -->
+      <section class="view" id="view-goals">
+        <div class="view-head">
+          <div class="vh-title">◎ GOALS &amp; FOCUS</div>
+          <div class="vh-actions">
+            <button class="btn primary sm" id="btnNewGoal">+ New goal</button>
+            <button class="btn sm" id="btnOpenFocusWidget">⏱ Focus widget</button>
+          </div>
+        </div>
+        <div class="goals-wrap">
+          <div class="focus-card" id="focusCard">
+            <div class="mono dim" style="letter-spacing:2px;font-size:10px;">FOCUS TIMER</div>
+            <div class="focus-timer" id="focusTimer">25:00</div>
+            <div class="flex" style="justify-content:center;gap:8px;">
+              <button class="btn primary" id="btnFocusToggle">▶ Start</button>
+              <button class="btn" id="btnFocusReset">Reset</button>
+              <span class="mono dim small" id="focusSessions">0 SESSIONS TODAY</span>
+            </div>
+          </div>
+          <div class="goals-grid" id="goalsGrid"></div>
+        </div>
+      </section>
+
+      <!-- FILES view -->
+      <section class="view" id="view-files">
+        <div class="view-head">
+          <div class="vh-title">▣ FILES &amp; IMPORTS</div>
+          <div class="vh-actions">
+            <button class="btn primary sm" id="btnImport">⬆ Import documents</button>
+          </div>
+        </div>
+        <div class="files-wrap">
+          <div class="dropzone" id="dropzone">
+            <div style="font-size:30px;margin-bottom:8px;">⬆</div>
+            <div><b>Import</b> PDF · DOCX · TXT · MD — text is extracted into a note</div>
+            <div class="small dim mono" style="margin-top:6px;">DOCX &amp; PDF open in the built-in viewer · or attach images &amp; docs to notes</div>
+          </div>
+          <div class="files-grid" id="filesGrid"></div>
+        </div>
+      </section>
+
+      <!-- TRASH view -->
+      <section class="view" id="view-trash">
+        <div class="view-head">
+          <div class="vh-title">⌫ TRASH</div>
+          <div class="vh-actions"><button class="btn danger sm" id="btnEmptyTrash">Empty trash</button></div>
+        </div>
+        <div class="trash-wrap" id="trashWrap"></div>
+      </section>
+    </main>
+
+    <!-- ===== right panel ===== -->
+    <aside class="rp" id="rightPanel">
+      <div class="rp-section">
+        <div class="rp-title">AI ACTIONS <button class="iconbtn" id="rpClose" style="width:22px;height:22px;font-size:12px;">×</button></div>
+        <div class="ai-actions" id="aiActions">
+          <button class="btn" data-ai="summarize">✦ Summarize</button>
+          <button class="btn" data-ai="keypoints">◈ Key points</button>
+          <button class="btn" data-ai="continue">➤ Continue writing</button>
+          <button class="btn" data-ai="grammar">Aa Fix grammar</button>
+          <button class="btn" data-ai="todo">☑ Extract tasks</button>
+          <button class="btn" data-ai="translate">文 Translate</button>
+        </div>
+        <div class="ai-result mt8" id="aiResult" hidden></div>
+      </div>
+      <div class="rp-section">
+        <div class="rp-title">REMINDERS <button class="iconbtn" id="btnAddReminder" style="width:22px;height:22px;">+</button></div>
+        <div id="rpReminders"><div class="small dim">No reminders yet.</div></div>
+      </div>
+      <div class="rp-section">
+        <div class="rp-title">BACKLINKS</div>
+        <div id="rpBacklinks"><div class="small dim">None yet.</div></div>
+      </div>
+      <div class="rp-section">
+        <div class="rp-title">ATTACHMENTS <button class="iconbtn" id="btnAttachRp" style="width:22px;height:22px;">+</button></div>
+        <div id="rpAttachments"><div class="small dim">No attachments.</div></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- floating layers -->
+  <div class="toasts" id="toasts"></div>
+
+  <script src="js/core.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/voice.js"></script>
+  <script src="js/goals.js"></script>
+  <script src="js/files.js"></script>
+  <script src="js/trash.js"></script>
+  <script src="js/palette.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
