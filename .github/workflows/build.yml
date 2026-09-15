@@ -20,13 +20,17 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: Setup Node (for tauri cli)
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Build release (NSIS installer + portable exe)
-        run: npx @tauri-apps/cli@latest build
+      - name: Install Tauri CLI
+        run: npm install -g @tauri-apps/cli
+        shell: bash
+
+      - name: Build release
+        run: tauri build
         shell: bash
 
       - name: Upload NSIS installer

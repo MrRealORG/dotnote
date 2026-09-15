@@ -21,7 +21,7 @@ function applyAppearance() {
   root.setProperty("--fs", `${S.settings.font_size || 15}px`);
   root.setProperty("--scale", (S.settings.ui_scale || 100) / 100);
   root.setProperty("--density", (S.settings.density || 100) / 100);
-  root.style.zoom = `${(S.settings.zoom || 100) / 100}`;
+  root.zoom = `${(S.settings.zoom || 100) / 100}`;
   const name = (S.settings.user_name || "you");
   const un = $("#userName"); if (un) un.textContent = name;
   const av = $(".usercard .avatar"); if (av) av.textContent = name[0]?.toUpperCase() || "Y";
